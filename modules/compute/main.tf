@@ -3,7 +3,12 @@ resource "azurerm_availability_set" "web_availabilty_set" {
   location            = var.location
   resource_group_name = var.resource_group
 }
-
+resource "azurerm_public_ip" "web_public_ip" {
+  name                = "web-public-ip"
+  resource_group_name = var.resource_group
+  location            = var.location
+  allocation_method   = "Dynamic"
+}
 resource "azurerm_network_interface" "web-net-interface" {
     name = "web-network"
     resource_group_name = var.resource_group
@@ -13,6 +18,7 @@ resource "azurerm_network_interface" "web-net-interface" {
         name = "web-webserver"
         subnet_id = var.web_subnet_id
         private_ip_address_allocation = "Dynamic"
+        public_ip_address_id = azurerm_public_ip.web_public_ip.id
     }
 }
 
